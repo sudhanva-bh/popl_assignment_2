@@ -21,3 +21,8 @@ clue(1, Solution) :-
     member(p(Name, Dept, _, 'AI'), Solution),
     Dept \= research,
     Name \= 'Dana'.
+
+clue(2, Solution) :-
+    member(p('Alex', Dept, Lang, _), Solution),
+    Dept \= development,
+    Lang \= 'c++'.
