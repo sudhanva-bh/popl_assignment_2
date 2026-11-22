@@ -29,3 +29,10 @@
                     (cons x processed)
                     processed)))))
     insert))
+
+(define (print-insert-result)
+  (let* ((x (read))
+         (lst (read))
+         (n (read)))
+    (display (insert-if-short x lst n))
+    (newline)))
