@@ -46,3 +46,7 @@ clue(7, Solution) :-
     member(p('Dana', Dept, Lang, _), Solution),
     Lang \= java,
     (Dept = research ; Dept = testing).
+
+clue(8, Solution) :-
+    member(p(_, research, Lang, data), Solution),
+    Lang \= javascript.
