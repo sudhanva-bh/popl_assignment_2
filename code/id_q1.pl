@@ -27,3 +27,9 @@ clue(2, Solution) :-
 clue(3, Solution) :-
     memberchk(p(_, testing, Lang, _), Solution),
     Lang == python.
+
+% CLUE 4: Ben prefers the web project and does not work in the testing department.
+clue(4, Solution) :-
+    memberchk(p('Ben', Dept, _, Project), Solution),
+    Project == web,
+    Dept \== testing.
