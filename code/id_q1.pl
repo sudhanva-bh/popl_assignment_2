@@ -22,3 +22,8 @@ clue(2, Solution) :-
     memberchk(p('Alex', Dept, Lang, _), Solution),
     Dept \== development,
     Lang \== 'c++'.
+
+% CLUE 3: The friend working in the testing department likes Python.
+clue(3, Solution) :-
+    memberchk(p(_, testing, Lang, _), Solution),
+    Lang == python.
