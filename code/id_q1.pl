@@ -44,3 +44,9 @@ clue(6, Solution) :-
     memberchk(p('Carla', Dept, _, Project), Solution),
     Project \== embedded,
     Dept \== development.
+
+% CLUE 7: Dana does not prefer Java and works in either the research or testing department.
+clue(7, Solution) :-
+    memberchk(p('Dana', Dept, Lang, _), Solution),
+    Lang \== java,
+    memberchk(Dept, [research, testing]).
