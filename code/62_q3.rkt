@@ -13,3 +13,13 @@
 (define (print-inorder tree)
   (display (inorder tree))
   (newline))
+
+(define (preorder tree)
+  (define (walk node k)
+    (if (null? node)
+        (k)
+        (cons (car node)
+              (walk (cadr node)
+                    (lambda ()
+                      (walk (caddr node) k))))))
+  (walk tree (lambda () '())))
