@@ -74,6 +74,11 @@ all_equations(List, Equations) :-
     findall(Equation, generate_equation(List, Equation), All),
     sort(All, Equations).
 
+% Each split and tree pair defines a distinct canonical equation.
 count_equations(List, N) :-
-    all_equations(List, Equations),
-    length(Equations, N).
+    aggregate_all(count,
+        ( split_numbers(List, LeftNumbers, RightNumbers),
+          expression(LeftNumbers, _, Value),
+          expression(RightNumbers, _, Value)
+        ),
+        N).
