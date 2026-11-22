@@ -23,3 +23,18 @@
     (if (< (my-length lst) n)
         (cons x processed)
         processed)))
+
+(define (make-inserter x len-ok?)
+  (letrec ((insert
+            (lambda (lst)
+              (let ((processed
+                     (my-map
+                      (lambda (elem)
+                        (if (or (pair? elem) (null? elem))
+                            (insert elem)
+                            elem))
+                      lst)))
+                (if (len-ok? (my-length lst))
+                    (cons x processed)
+                    processed)))))
+    insert))
