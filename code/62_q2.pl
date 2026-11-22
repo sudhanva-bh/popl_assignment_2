@@ -24,3 +24,8 @@ expression(Numbers, op(Op, LeftTree, RightTree), Value) :-
     expression(LeftNumbers, LeftTree, LeftValue),
     expression(RightNumbers, RightTree, RightValue),
     apply_operator(Op, LeftValue, RightValue, Value).
+
+precedence(+, 1).
+precedence(-, 1).
+precedence(*, 2).
+precedence(/, 2).
