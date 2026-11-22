@@ -29,3 +29,13 @@ precedence(+, 1).
 precedence(-, 1).
 precedence(*, 2).
 precedence(/, 2).
+
+needs_parentheses(left, ParentOp, op(ChildOp, _, _)) :-
+    precedence(ParentOp, ParentLevel),
+    precedence(ChildOp, ChildLevel),
+    ChildLevel < ParentLevel.
+
+needs_parentheses(right, ParentOp, op(ChildOp, _, _)) :-
+    precedence(ParentOp, ParentLevel),
+    precedence(ChildOp, ChildLevel),
+    ChildLevel =< ParentLevel.
