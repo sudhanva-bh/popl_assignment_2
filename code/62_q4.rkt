@@ -13,16 +13,7 @@
             (my-map f (cdr lst)))))
 
 (define (insert-if-short x lst n)
-  (let ((processed
-         (my-map
-          (lambda (elem)
-            (if (or (pair? elem) (null? elem))
-                (insert-if-short x elem n)
-                elem))
-          lst)))
-    (if (< (my-length lst) n)
-        (cons x processed)
-        processed)))
+  ((make-inserter x (lambda (len) (< len n))) lst))
 
 (define (make-inserter x len-ok?)
   (letrec ((insert
