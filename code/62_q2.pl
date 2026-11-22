@@ -61,3 +61,11 @@ format_expression(op(Op, Left, Right), String) :-
 
     format(string(String), "~s~w~s",
            [FormattedLeft, Op, FormattedRight]).
+
+generate_equation(List, Equation) :-
+    split_numbers(List, LeftNumbers, RightNumbers),
+    expression(LeftNumbers, LeftTree, Value),
+    expression(RightNumbers, RightTree, Value),
+    format_expression(LeftTree, LeftString),
+    format_expression(RightTree, RightString),
+    format(string(Equation), "~s=~s", [LeftString, RightString]).
