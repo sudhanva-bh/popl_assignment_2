@@ -9,3 +9,7 @@
                 (cons (car node)
                       (walk (caddr node) k))))))
   (walk tree (lambda () '())))
+
+(define (print-inorder tree)
+  (display (inorder tree))
+  (newline))
