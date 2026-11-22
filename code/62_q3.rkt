@@ -1,0 +1,66 @@
+#lang racket/base
+
+(define (inorder tree)
+  (define (walk node k)
+    (if (null? node)
+        (k)
+        (walk (cadr node)
+              (lambda ()
+                (cons (car node)
+                      (walk (caddr node) k))))))
+  (walk tree (lambda () '())))
+
+(define (print-inorder tree)
+  (display (inorder tree))
+  (newline))
+
+(define (preorder tree)
+  (define (walk node k)
+    (if (null? node)
+        (k)
+        (cons (car node)
+              (walk (cadr node)
+                    (lambda ()
+                      (walk (caddr node) k))))))
+  (walk tree (lambda () '())))
+
+(define (postorder tree)
+  (define (walk node k)
+    (if (null? node)
+        (k)
+        (walk (cadr node)
+              (lambda ()
+                (walk (caddr node)
+                      (lambda ()
+                        (cons (car node) (k))))))))
+  (walk tree (lambda () '())))
+
+(define (print-all-traversals tree)
+  (display (inorder tree))
+  (newline)
+  (display (preorder tree))
+  (newline)
+  (display (postorder tree))
+  (newline))
+
+(define (tree-height tree)
+  (if (null? tree)
+      0
+      (let* ((left-height (tree-height (cadr tree)))
+             (right-height (tree-height (caddr tree))))
+        (+ 1 (max left-height right-height)))))
+
+(define (leaf-count tree)
+  (if (null? tree)
+      0
+      (let ((left (cadr tree))
+            (right (caddr tree)))
+        (if (and (null? left) (null? right))
+            1
+            (let* ((left-count (leaf-count left))
+                   (right-count (leaf-count right)))
+              (+ left-count right-count))))))
+
+(define (print-height-and-leaves tree)
+  (display (list (tree-height tree) (leaf-count tree)))
+  (newline))

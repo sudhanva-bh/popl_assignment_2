@@ -1,0 +1,3 @@
+Can you draft a short AI skill called `scheme-dev` for my Scheme assignment? Use the uploaded assignment as a reference for the requirements and Scheme rules. This step is just for the skill file; I’ll ask about S1 and S2 separately.
+
+Start with a short YAML header with `name` and `description`. Cover the Racket version, allowed built-ins, coding and recursion conventions, how to run and test the code, and a quick checklist of common mistakes to catch before answering. Return just the skill text.
