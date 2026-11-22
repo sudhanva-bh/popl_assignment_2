@@ -60,3 +60,7 @@
             (let* ((left-count (leaf-count left))
                    (right-count (leaf-count right)))
               (+ left-count right-count))))))
+
+(define (print-height-and-leaves tree)
+  (display (list (tree-height tree) (leaf-count tree)))
+  (newline))
