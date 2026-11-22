@@ -39,3 +39,25 @@ needs_parentheses(right, ParentOp, op(ChildOp, _, _)) :-
     precedence(ParentOp, ParentLevel),
     precedence(ChildOp, ChildLevel),
     ChildLevel =< ParentLevel.
+
+format_expression(num(N), String) :-
+    number_string(N, String).
+
+format_expression(op(Op, Left, Right), String) :-
+    format_expression(Left, LeftString),
+    format_expression(Right, RightString),
+
+    ( needs_parentheses(left, Op, Left) ->
+        format(string(FormattedLeft), "(~s)", [LeftString])
+    ;
+        FormattedLeft = LeftString
+    ),
+
+    ( needs_parentheses(right, Op, Right) ->
+        format(string(FormattedRight), "(~s)", [RightString])
+    ;
+        FormattedRight = RightString
+    ),
+
+    format(string(String), "~s~w~s",
+           [FormattedLeft, Op, FormattedRight]).
