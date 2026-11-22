@@ -61,3 +61,14 @@ solve(Solution) :-
     clue(6, Solution),
     clue(7, Solution),
     clue(8, Solution).
+
+count_solutions(Active, N) :-
+    findall(
+        Solution,
+        (
+            candidate_solution(Solution),
+            forall(member(ClueNum, Active), clue(ClueNum, Solution))
+        ),
+        Solutions
+    ),
+    length(Solutions, N).
