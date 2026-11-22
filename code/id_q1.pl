@@ -38,3 +38,9 @@ clue(4, Solution) :-
 clue(5, Solution) :-
     memberchk(p(_, Dept, java, _), Solution),
     Dept == design.
+
+% CLUE 6: Carla's project is not embedded, and she does not work in the development department.
+clue(6, Solution) :-
+    memberchk(p('Carla', Dept, _, Project), Solution),
+    Project \== embedded,
+    Dept \== development.
