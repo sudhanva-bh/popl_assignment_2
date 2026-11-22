@@ -76,3 +76,14 @@ count_solutions(Active, N) :-
         Solutions
     ),
     length(Solutions, N).
+
+main :-
+    once(solve(Solution)),
+    member(p('Alex', AlexDept, AlexLang, AlexProject), Solution),
+    member(p('Ben', BenDept, BenLang, BenProject), Solution),
+    member(p('Carla', CarlaDept, CarlaLang, CarlaProject), Solution),
+    member(p('Dana', DanaDept, DanaLang, DanaProject), Solution),
+    format('Alex = [~w, ~w, ~w]~n', [AlexDept, AlexLang, AlexProject]),
+    format('Ben = [~w, ~w, ~w]~n', [BenDept, BenLang, BenProject]),
+    format('Carla = [~w, ~w, ~w]~n', [CarlaDept, CarlaLang, CarlaProject]),
+    format('Dana = [~w, ~w, ~w]~n', [DanaDept, DanaLang, DanaProject]).
