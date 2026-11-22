@@ -51,6 +51,10 @@ clue(8, Solution) :-
     member(p(_, research, Lang, data), Solution),
     Lang \= javascript.
 
+% CLUE 9: The friend who prefers the AI project works in the testing department.
+clue(9, Solution) :-
+    member(p(_, testing, _, 'AI'), Solution).
+
 solve(Solution) :-
     candidate_solution(Solution),
     clue(1, Solution),
