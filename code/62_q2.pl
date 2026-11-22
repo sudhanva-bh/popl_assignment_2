@@ -69,3 +69,7 @@ generate_equation(List, Equation) :-
     format_expression(LeftTree, LeftString),
     format_expression(RightTree, RightString),
     format(string(Equation), "~s=~s", [LeftString, RightString]).
+
+all_equations(List, Equations) :-
+    findall(Equation, generate_equation(List, Equation), All),
+    sort(All, Equations).
