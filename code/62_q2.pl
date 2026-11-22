@@ -73,3 +73,7 @@ generate_equation(List, Equation) :-
 all_equations(List, Equations) :-
     findall(Equation, generate_equation(List, Equation), All),
     sort(All, Equations).
+
+count_equations(List, N) :-
+    all_equations(List, Equations),
+    length(Equations, N).
