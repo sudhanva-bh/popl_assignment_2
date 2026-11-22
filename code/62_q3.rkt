@@ -34,3 +34,11 @@
                       (lambda ()
                         (cons (car node) (k))))))))
   (walk tree (lambda () '())))
+
+(define (print-all-traversals tree)
+  (display (inorder tree))
+  (newline)
+  (display (preorder tree))
+  (newline)
+  (display (postorder tree))
+  (newline))
