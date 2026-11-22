@@ -50,3 +50,9 @@ clue(7, Solution) :-
     memberchk(p('Dana', Dept, Lang, _), Solution),
     Lang \== java,
     memberchk(Dept, [research, testing]).
+
+% CLUE 8: The friend who prefers data projects works in research and does not use JavaScript.
+clue(8, Solution) :-
+    memberchk(p(_, Dept, Lang, data), Solution),
+    Dept == research,
+    Lang \== javascript.
