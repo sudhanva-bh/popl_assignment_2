@@ -16,3 +16,8 @@ candidate_solution([
         ['AI', web, embedded, data],
         [AlexProject, BenProject, CarlaProject, DanaProject]
     ).
+
+clue(1, Solution) :-
+    member(p(Name, Dept, _, 'AI'), Solution),
+    Dept \= research,
+    Name \= 'Dana'.
