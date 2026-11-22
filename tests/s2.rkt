@@ -1,0 +1,121 @@
+#lang racket
+
+;; Run from the repository root: racket tests/s2.rkt code/62_q4.rkt
+;; The submitted solution is never modified.
+
+(require racket/file
+         racket/port
+         racket/string)
+
+(define args (current-command-line-arguments))
+(unless (= (vector-length args) 1)
+  (eprintf "Usage: racket tests/s2.rkt <solution.rkt>\n")
+  (exit 2))
+
+(define solution (path->complete-path (vector-ref args 0)))
+(unless (file-exists? solution)
+  (eprintf "Solution not found: ~a\n" solution)
+  (exit 2))
+
+(define racket-exe (find-executable-path "racket"))
+(unless racket-exe
+  (eprintf "Racket executable not found.\n")
+  (exit 2))
+
+(define source (file->string solution))
+(define passed 0)
+(define failed 0)
+
+(define (preview s)
+  (if (> (string-length s) 180)
+      (string-append (substring s 0 180) " ... [truncated]")
+      s))
+
+;; Run the original definitions plus one optional test call in a temporary .rkt file.
+;; Collect stdout and stderr concurrently to prevent full output pipes blocking.
+(define (execute appended input)
+  (define tmp (make-temporary-file "s2-check-~a.rkt"))
+  (dynamic-wind
+    void
+    (lambda ()
+      (call-with-output-file tmp #:exists 'truncate
+        (lambda (out)
+          (display source out)
+          (newline out)
+          (display appended out)
+          (newline out)))
+      (define-values (proc stdout stdin stderr)
+        (subprocess #f #f #f racket-exe (path->string tmp)))
+      (define out-box (box ""))
+      (define err-box (box ""))
+      (define out-reader
+        (thread (lambda () (set-box! out-box (port->string stdout)))))
+      (define err-reader
+        (thread (lambda () (set-box! err-box (port->string stderr)))))
+      (display input stdin)
+      (close-output-port stdin)
+      (subprocess-wait proc)
+      (thread-wait out-reader)
+      (thread-wait err-reader)
+      (close-input-port stdout)
+      (close-input-port stderr)
+      (values (subprocess-status proc) (unbox out-box) (unbox err-box)))
+    (lambda () (when (file-exists? tmp) (delete-file tmp)))))
+
+(define (check name appended input expected)
+  (with-handlers ([exn:fail?
+                   (lambda (e)
+                     (set! failed (add1 failed))
+                     (printf "FAIL ~a: ~a\n" name (exn-message e)))])
+    (define-values (status actual stderr) (execute appended input))
+    (if (and (equal? status 0) (string=? stderr "")
+             (string=? actual expected))
+        (begin (set! passed (add1 passed)) (printf "PASS ~a\n" name))
+        (begin
+          (set! failed (add1 failed))
+          (printf "FAIL ~a (exit ~a)\n  expected: ~s\n  actual:   ~s\n  stderr:   ~s\n"
+                  name status (preview expected) (preview actual) (preview stderr))))))
+
+(define printer "(print-insert-result)")
+
+;; Loading the file must print nothing (and must not invoke read).
+(check "silent load" "" "" "")
+
+;; The four examples from the assignment: all require an exact trailing newline.
+(check "example 1" printer
+       "42\n((1 2) (3 4 5) (6) ())\n3\n"
+       "((42 1 2) (3 4 5) (42 6) (42))\n")
+(check "example 2" printer
+       "0\n(((1) 2) (3) ((4 5 6) ()))\n3\n"
+       "((0 (0 1) 2) (0 3) (0 (4 5 6) (0)))\n")
+(check "example 3 (empty, positive n)" printer
+       "7\n()\n3\n" "(7)\n")
+(check "example 4 (empty, n=0)" printer
+       "7\n()\n0\n" "()\n")
+
+;; A list of length n must NOT get a new leading element.
+(check "strict threshold (length = n)" printer
+       "9\n(1 2)\n2\n" "(1 2)\n")
+
+;; Only lists of exactly two elements qualify. The outer list has length 3.
+(check "custom make-inserter predicate"
+       "(display ((make-inserter 'z (lambda (len) (= len 2))) '((1) (2 3) ()))) (newline)"
+       "" "((1) (z 2 3) ())\n")
+
+;; 100 nested single-element lists surrounding the empty list.
+(define deep-input
+  (for/fold ([v '()]) ([i (in-range 100)]) (list v)))
+(define deep-expected
+  (for/fold ([v '(q)]) ([i (in-range 100)]) (list 'q v)))
+(check "nesting depth 100" printer
+       (format "q\n~s\n2\n" deep-input)
+       (format "~s\n" deep-expected))
+
+;; 10,000 top-level elements: verify every element and leading insertion.
+(define wide-input (build-list 10000 add1))
+(check "10,000 top-level elements" printer
+       (format "q\n~s\n10001\n" wide-input)
+       (format "~s\n" (cons 'q wide-input)))
+
+(printf "\n~a passed; ~a failed\n" passed failed)
+(when (> failed 0) (exit 1))
