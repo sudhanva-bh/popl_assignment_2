@@ -49,3 +49,14 @@
       (let* ((left-height (tree-height (cadr tree)))
              (right-height (tree-height (caddr tree))))
         (+ 1 (max left-height right-height)))))
+
+(define (leaf-count tree)
+  (if (null? tree)
+      0
+      (let ((left (cadr tree))
+            (right (caddr tree)))
+        (if (and (null? left) (null? right))
+            1
+            (let* ((left-count (leaf-count left))
+                   (right-count (leaf-count right)))
+              (+ left-count right-count))))))
