@@ -42,3 +42,10 @@
   (newline)
   (display (postorder tree))
   (newline))
+
+(define (tree-height tree)
+  (if (null? tree)
+      0
+      (let* ((left-height (tree-height (cadr tree)))
+             (right-height (tree-height (caddr tree))))
+        (+ 1 (max left-height right-height)))))
